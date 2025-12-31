@@ -3,11 +3,15 @@ import plugin from '../plugin.json';
 class AcodePlugin {
 
   async init() {
-    // plugin initialisation 
+    //create a new file in /bin/termux11
+    //write the magic code
+    //make it executable?
+    //profit
   }
 
   async destroy() {
     // plugin clean up
+
   }
 }
 
