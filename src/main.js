@@ -1,17 +1,42 @@
 import plugin from '../plugin.json';
 
+function removePrefix(str, prefix) {
+    if (str.startsWith(prefix)) {
+      return str.slice(prefix.length);
+    }
+    return str;
+  }
+  
+
+const THIS_PLUGIN = removePrefix(`${PLUGIN_DIR}/x11`,"file://")
+
+async function exec(cmd){
+  return await Executor.BackgroundExecutor.execute(cmd,true)
+}
+
 class AcodePlugin {
 
   async init() {
-    //create a new file in /bin/termux11
-    //write the magic code
-    //make it executable?
-    //profit
+
+    if(!await Terminal.isInstalled()) {
+      acode.require("alert")("Termux11","Terminal is not installed or not working correctly.",()=>{})
+      return
+    }
+
+    await exec("mkdir -p /opt",true)
+    await exec(`cp -n ${THIS_PLUGIN}/base.apk /opt/base.apk`),true
+    await exec("chmod -w /opt/base.apk",true)
+
+    await exec(`cp -n ${THIS_PLUGIN}/termux-x11 /bin/termux-x11`,true)
+    await exec(`chmod +x /bin/termux-x11`,true)
+
   }
 
   async destroy() {
     // plugin clean up
-
+    await exec("rm -f /bin/termux-x11",true)
+    await exec("rm -f /opt/base.apk",true)
+  
   }
 }
 
